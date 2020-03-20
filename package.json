@@ -28,7 +28,6 @@
     "clean": "rimraf ./dist && rimraf ./coverage",
     "lint": "eslint src",
     "prepublish": "yarn run build",
-    "prepare": "yarn run build",
     "test": "jest",
     "test:coverage": "yarn run test -- --coverage",
     "test:coverage:deploy": "yarn run test:coverage && codecov"
