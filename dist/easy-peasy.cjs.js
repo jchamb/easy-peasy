@@ -1445,7 +1445,7 @@ function createContextStore(model, config) {
         config,
       );
     }, []);
-    return React__default.createElement(
+    return /*#__PURE__*/ React__default.createElement(
       StoreContext.Provider,
       {
         value: store,
@@ -1541,7 +1541,7 @@ function createTransform(inbound, outbound, config) {
 function StoreProvider(_ref) {
   var children = _ref.children,
     store = _ref.store;
-  return React__default.createElement(
+  return /*#__PURE__*/ React__default.createElement(
     StoreContext.Provider,
     {
       value: store,
