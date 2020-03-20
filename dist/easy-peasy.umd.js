@@ -258,8 +258,10 @@
       return (
         e !== o &&
           c.forEach(function(e) {
-            var t = e.parentPath;
-            (0, e.bindComputedProperty)(re(t, o));
+            var t = e.parentPath,
+              n = e.bindComputedProperty,
+              r = re(t, o);
+            r && n(r);
           }),
         o
       );

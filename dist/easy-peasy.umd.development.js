@@ -469,7 +469,8 @@
         computedProperties.forEach(function(_ref2) {
           var parentPath = _ref2.parentPath,
             bindComputedProperty = _ref2.bindComputedProperty;
-          bindComputedProperty(get(parentPath, next));
+          var prop = get(parentPath, next);
+          if (prop) bindComputedProperty(prop);
         });
       }
 
