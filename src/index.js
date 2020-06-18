@@ -1,4 +1,4 @@
-import { setAutoFreeze } from 'immer';
+import { setAutoFreeze, enableMapSet } from 'immer';
 import {
   createTypedHooks,
   useStoreActions,
@@ -23,6 +23,8 @@ import {
   thunk,
   thunkOn,
 } from './helpers';
+
+enableMapSet();
 
 /**
  * The auto freeze feature of immer doesn't seem to work in our testing. We have
