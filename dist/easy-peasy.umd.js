@@ -2,7 +2,7 @@
   'object' == typeof exports && 'undefined' != typeof module
     ? t(
         exports,
-        require('immer-peasy'),
+        require('immer'),
         require('react'),
         require('redux'),
         require('redux-thunk'),
@@ -13,7 +13,7 @@
     : 'function' == typeof define && define.amd
     ? define([
         'exports',
-        'immer-peasy',
+        'immer',
         'react',
         'redux',
         'redux-thunk',
@@ -31,7 +31,7 @@
         e.isPlainObject,
         e.debounce,
       );
-})(this, function(e, d, s, H, B, U, V, G) {
+})(this, function(e, l, s, H, B, U, V, G) {
   'use strict';
   var c = 'default' in s ? s.default : s;
   (B = B && Object.prototype.hasOwnProperty.call(B, 'default') ? B.default : B),
@@ -94,12 +94,12 @@
     };
   }
   var o = a(r);
-  function l(e) {
+  function d(e) {
     return function() {
       return s.useContext(e).dispatch;
     };
   }
-  var i = l(r);
+  var i = d(r);
   function u() {
     return s.useContext(r);
   }
@@ -184,11 +184,11 @@
           t[e] = o[e];
         }));
   };
-  function g(l) {
+  function g(d) {
     return (
-      void 0 === l && (l = !1),
+      void 0 === d && (d = !1),
       function(e, t, n) {
-        if (l) {
+        if (d) {
           var r = re(e, t),
             o = n(r);
           return r !== o
@@ -204,15 +204,15 @@
             : t;
         }
         if (0 === e.length) {
-          var i = d.createDraft(t),
+          var i = l.createDraft(t),
             u = n(i);
-          return u ? (d.isDraft(u) ? d.finishDraft(u) : u) : d.finishDraft(i);
+          return u ? (l.isDraft(u) ? l.finishDraft(u) : u) : l.finishDraft(i);
         }
         var c = e.slice(0, e.length - 1),
-          a = d.createDraft(t),
+          a = l.createDraft(t),
           s = re(c, t),
           f = n(re(e, a));
-        return f && (s[e[e.length - 1]] = f), d.finishDraft(a);
+        return f && (s[e[e.length - 1]] = f), l.finishDraft(a);
       }
     );
   }
@@ -348,61 +348,63 @@
       t
     );
   }
-  function ae(d, p, v) {
+  function ae(l, p, v) {
     var h = Promise.resolve();
     return (
       0 < v.internals.persistenceConfig.length &&
         v.internals.persistenceConfig.forEach(function(e) {
           function n(e, t) {
-            if ('overwrite' === i) oe(o, e, t);
-            else if ('merge' === i) {
-              var n = re(o, e);
-              Object.keys(t).forEach(function(e) {
-                n[e] = t[e];
-              });
-            } else if ('mergeDeep' === i) {
-              !(function n(r, o) {
-                Object.keys(o).forEach(function(e) {
-                  var t = o[e];
-                  V(t) ? (V(r[e]) || (r[e] = {}), n(r[e], t)) : (r[e] = t);
-                });
-              })(re(o, e), t);
-            }
+            var n;
+            'overwrite' === c
+              ? oe(i, e, t)
+              : 'merge' === c
+              ? ((n = re(i, e)),
+                Object.keys(t).forEach(function(e) {
+                  n[e] = t[e];
+                }))
+              : 'mergeDeep' === c &&
+                (function n(r, o) {
+                  Object.keys(o).forEach(function(e) {
+                    var t = o[e];
+                    V(t) ? (V(r[e]) || (r[e] = {}), n(r[e], t)) : (r[e] = t);
+                  });
+                })(re(i, e), t);
           }
-          var o = e.path,
-            t = e.config,
-            r = t.blacklist,
-            i = t.mergeStrategy,
-            u = t.storage,
-            c = t.whitelist,
-            a = v.internals.defaultState,
-            s = ce(ne(re(o, a)), c, r);
-          if (u.isAsync) {
-            var f = s.reduce(function(e, t) {
-              var n = [].concat(o, [t]),
-                r = u.getItem(d(n));
-              return y(r) && e.push({ key: t, dataPromise: r }), e;
-            }, []);
-            0 < f.length &&
+          var o,
+            t,
+            i = e.path,
+            r = e.config,
+            u = r.blacklist,
+            c = r.mergeStrategy,
+            a = r.storage,
+            s = r.whitelist,
+            f = v.internals.defaultState,
+            d = ce(ne(re(i, f)), s, u);
+          a.isAsync
+            ? 0 <
+                (o = d.reduce(function(e, t) {
+                  var n = [].concat(i, [t]),
+                    r = a.getItem(l(n));
+                  return y(r) && e.push({ key: t, dataPromise: r }), e;
+                }, [])).length &&
               (h = Promise.all(
-                f.map(function(e) {
+                o.map(function(e) {
                   return e.dataPromise;
                 }),
               ).then(function(e) {
                 var t = e.reduce(function(e, t, n) {
-                  var r = f[n].key;
+                  var r = o[n].key;
                   return void 0 !== t && (e[r] = t), e;
                 }, {});
-                0 !== Object.keys(t).length && (n(a, t), p(a));
-              }));
-          } else {
-            var l = s.reduce(function(e, t) {
-              var n = [].concat(o, [t]),
-                r = u.getItem(d(n));
-              return void 0 !== r && (e[t] = r), e;
-            }, {});
-            n(a, l), p(a);
-          }
+                0 !== Object.keys(t).length && (n(f, t), p(f));
+              }))
+            : ((t = d.reduce(function(e, t) {
+                var n = [].concat(i, [t]),
+                  r = a.getItem(l(n));
+                return void 0 !== r && (e[t] = r), e;
+              }, {})),
+              n(f, t),
+              p(f));
         }),
       h
     );
@@ -466,7 +468,7 @@
       (r.type = u), (r.startType = c), (r.successType = a), (r.failType = s), r
     );
   }
-  function le(e, w, I, A) {
+  function de(e, w, I, A) {
     var o,
       i,
       u,
@@ -487,7 +489,7 @@
         return Object.keys(R).forEach(function(t) {
           function e() {
             var e = re(j, w);
-            oe(g, x, e && t in e ? e[t] : y);
+            oe(C, x, e && t in e ? e[t] : k);
           }
           var n,
             r,
@@ -498,105 +500,113 @@
             a,
             s,
             f,
-            l,
             d,
+            l,
             p,
             v,
             h,
-            y = R[t],
-            g = [].concat(j, [t]),
-            m = { parent: j, path: g, key: t };
-          if (t !== Y)
-            if ('function' == typeof y)
-              if (y[F] || y[Q]) {
-                var S = y,
-                  b = se(y, m, A);
-                (D[b.type] = b),
-                  (_[b.type] = S),
-                  'ePRS' !== m.key &&
-                    (y[Q] ? (L.push(y), oe(g, z, b)) : oe(g, T, b));
-              } else if (y[ee] || y[$]) {
-                var O =
-                    ((l = m),
-                    (d = A),
-                    (p = I),
-                    (v = T),
-                    (h = (f = y)[ee] || f[$]),
-                    function(e) {
+            y,
+            g,
+            m,
+            S,
+            b,
+            O,
+            k = R[t],
+            C = [].concat(j, [t]),
+            E = { parent: j, path: C, key: t };
+          t !== Y
+            ? 'function' == typeof k
+              ? k[F] || k[Q]
+                ? ((o = se((r = k), E, A)),
+                  (D[o.type] = o),
+                  (_[o.type] = r),
+                  'ePRS' !== E.key &&
+                    (k[Q] ? (L.push(k), oe(C, z, o)) : oe(C, T, o)))
+                : k[ee] || k[$]
+                ? ((g = E),
+                  (m = A),
+                  (S = I),
+                  (b = T),
+                  (O = (y = k)[ee] || y[$]),
+                  (u = fe(
+                    k,
+                    E,
+                    A,
+                    (i = function(e) {
                       var t = {
-                        dispatch: d.dispatch,
+                        dispatch: m.dispatch,
                         getState: function() {
-                          return re(l.parent, d.getState());
+                          return re(g.parent, m.getState());
                         },
                         getStoreActions: function() {
-                          return v;
+                          return b;
                         },
-                        getStoreState: d.getState,
-                        injections: p,
-                        meta: l,
+                        getStoreState: m.getState,
+                        injections: S,
+                        meta: g,
                       };
                       return (
-                        f[$] &&
-                          h.resolvedTargets &&
-                          (e.resolvedTargets = [].concat(h.resolvedTargets)),
-                        f(re(l.parent, v), e, t)
+                        y[$] &&
+                          O.resolvedTargets &&
+                          (e.resolvedTargets = [].concat(O.resolvedTargets)),
+                        y(re(g.parent, b), e, t)
                       );
                     }),
-                  k = fe(y, m, A, O);
-                oe(g, M, O),
-                  (D[k.type] = k),
-                  y[$] ? (L.push(y), oe(g, z, k)) : oe(g, T, k);
-              } else if (y[W]) {
-                var C = re(j, x),
-                  E =
-                    ((r = j),
-                    (o = t),
-                    (u = J),
-                    (c = A),
-                    (a = (i = y)[W]),
-                    (s = U(1)(i)),
+                  )),
+                  oe(C, M, i),
+                  (D[u.type] = u),
+                  k[$] ? (L.push(k), oe(C, z, u)) : oe(C, T, u))
+                : k[W]
+                ? ((c = re(j, x)),
+                  (a =
+                    ((s = j),
+                    (f = t),
+                    (l = J),
+                    (p = A),
+                    (v = (d = k)[W]),
+                    (h = U(1)(d)),
                     function(e) {
-                      Object.defineProperty(e, o, {
+                      Object.defineProperty(e, f, {
                         configurable: !0,
                         enumerable: !0,
                         get: function() {
                           var t;
-                          if (u.isInReducer) t = u.currentState;
+                          if (l.isInReducer) t = l.currentState;
                           else {
-                            if (null == c.getState) return;
+                            if (null == p.getState) return;
                             try {
-                              t = c.getState();
+                              t = p.getState();
                             } catch (e) {
                               return;
                             }
                           }
-                          var n = re(r, t),
-                            e = a.stateResolvers.map(function(e) {
+                          var n = re(s, t),
+                            e = v.stateResolvers.map(function(e) {
                               return e(n, t);
                             });
-                          return s.apply(void 0, e);
+                          return h.apply(void 0, e);
                         },
                       });
-                    });
-                E(C),
-                  N.push({ key: t, parentPath: j, bindComputedProperty: E });
-              } else y[Z] ? q.push({ key: t, parentPath: j, reducer: y }) : e();
-            else if (V(y)) {
-              null == re(g, x) && oe(g, x, {}), P(y, g);
-            } else e();
-          else
-            X.push(
-              (void 0 === (n = y) && (n = {}),
-              {
-                path: j,
-                config: {
-                  blacklist: n.blacklist || [],
-                  mergeStrategy: n.mergeStrategy || 'merge',
-                  storage: ue(n.storage, n.transformers),
-                  whitelist: n.whitelist || [],
-                },
-              }),
-            );
+                    }))(c),
+                  N.push({ key: t, parentPath: j, bindComputedProperty: a }))
+                : k[Z]
+                ? q.push({ key: t, parentPath: j, reducer: k })
+                : e()
+              : V(k)
+              ? (null == re(C, x) && oe(C, x, {}), P(k, C))
+              : e()
+            : X.push(
+                (void 0 === (n = k) && (n = {}),
+                {
+                  path: j,
+                  config: {
+                    blacklist: n.blacklist || [],
+                    mergeStrategy: n.mergeStrategy || 'merge',
+                    storage: ue(n.storage, n.transformers),
+                    whitelist: n.whitelist || [],
+                  },
+                }),
+              );
         });
       })(e, []),
       (o = T),
@@ -648,7 +658,7 @@
       return x.internals.actionCreatorDict['@action.ePRS'](e);
     }
     function i(e) {
-      var t, n, r, o, i, u, c, a, s, f, l, d, p;
+      var t, n, r, o, i, u, c, a, s, f, d, l, p;
       void 0 === e && (e = {}),
         (x.internals =
           ((n = (t = {
@@ -663,23 +673,23 @@
           (o = t.injections),
           (i = t.model),
           (u = t.reducerEnhancer),
-          (c = le(i, r, o, t.references)),
+          (c = de(i, r, o, t.references)),
           (a = c.actionCreatorDict),
           (s = c.actionCreators),
           (f = c.actionReducersDict),
-          (l = c.computedState),
-          (d = c.computedProperties),
+          (d = c.computedState),
+          (l = c.computedProperties),
           (p = c.customReducers),
           {
             actionCreatorDict: a,
             actionCreators: s,
-            computedProperties: d,
-            computedState: l,
+            computedProperties: l,
+            computedState: d,
             defaultState: c.defaultState,
             listenerActionCreators: c.listenerActionCreators,
             listenerActionMap: c.listenerActionMap,
             persistenceConfig: c.persistenceConfig,
-            reducer: u(ie(n, f, p, d)),
+            reducer: u(ie(n, f, p, l)),
           }));
     }
     var c,
@@ -687,8 +697,8 @@
       u,
       s,
       f,
-      l,
-      d = ne(e),
+      d,
+      l = ne(e),
       p = t.compose,
       v = t.devTools,
       h = void 0 === v || v,
@@ -713,7 +723,7 @@
             }
           : I,
       x = {},
-      D = n(d),
+      D = n(l),
       T = [],
       _ =
         ((c = r),
@@ -750,16 +760,16 @@
         }),
       N =
         ((f = r),
-        (l = s = x),
+        (d = s = x),
         function() {
           return new Promise(function(c, a) {
-            l.internals.persistenceConfig.forEach(function(e) {
+            d.internals.persistenceConfig.forEach(function(e) {
               var n = e.path,
                 t = e.config,
                 r = t.storage,
                 o = t.whitelist,
                 i = t.blacklist,
-                u = ce(re(n, l.getState()), o, i);
+                u = ce(re(n, d.getState()), o, i);
               0 < u.length
                 ? Promise.all(
                     u.map(function(e) {
@@ -801,23 +811,23 @@
         function() {
           return function(r) {
             return function(t) {
-              var e = r(t);
-              if (
+              var n,
+                e = r(t);
+              return (
                 t &&
-                z.internals.listenerActionMap[t.type] &&
-                0 < z.internals.listenerActionMap[t.type].length
-              ) {
-                var n = z.internals.actionCreatorDict[t.type];
-                z.internals.listenerActionMap[t.type].forEach(function(e) {
-                  e({
-                    type: n ? n.type : t.type,
-                    payload: t.payload,
-                    error: t.error,
-                    result: t.result,
-                  });
-                });
-              }
-              return e;
+                  z.internals.listenerActionMap[t.type] &&
+                  0 < z.internals.listenerActionMap[t.type].length &&
+                  ((n = z.internals.actionCreatorDict[t.type]),
+                  z.internals.listenerActionMap[t.type].forEach(function(e) {
+                    e({
+                      type: n ? n.type : t.type,
+                      payload: t.payload,
+                      error: t.error,
+                      result: t.result,
+                    });
+                  })),
+                e
+              );
             };
           };
         }),
@@ -892,7 +902,7 @@
       },
     });
   }
-  d.setAutoFreeze(!1),
+  l.setAutoFreeze(!1),
     (e.StoreProvider = function(e) {
       var t = e.children,
         n = e.store;
@@ -948,7 +958,7 @@
         },
         useStoreState: t(u),
         useStoreActions: a(u),
-        useStoreDispatch: l(u),
+        useStoreDispatch: d(u),
         useStoreRehydrated: p(u),
       };
     }),
@@ -979,7 +989,7 @@
       };
     }),
     (e.debug = function(e) {
-      return d.isDraft(e) ? d.original(e) : e;
+      return l.isDraft(e) ? l.original(e) : e;
     }),
     (e.memo = function(e, t) {
       return U(t)(e);

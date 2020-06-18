@@ -6,7 +6,7 @@ function _interopDefault(ex) {
   return ex && typeof ex === 'object' && 'default' in ex ? ex['default'] : ex;
 }
 
-var immerPeasy = require('immer-peasy');
+var immer = require('immer');
 var React = require('react');
 var React__default = _interopDefault(React);
 var redux = require('redux');
@@ -183,8 +183,8 @@ var thunkOnSymbol = 'tO';
 var thunkSymbol = 't';
 
 var debug = function debug(state) {
-  if (immerPeasy.isDraft(state)) {
-    return immerPeasy.original(state);
+  if (immer.isDraft(state)) {
+    return immer.original(state);
   }
 
   return state;
@@ -333,21 +333,19 @@ function createSimpleProduce(disableImmer) {
     }
 
     if (path.length === 0) {
-      var _draft = immerPeasy.createDraft(state);
+      var _draft = immer.createDraft(state);
 
       var _result = fn(_draft);
 
       if (_result) {
-        return immerPeasy.isDraft(_result)
-          ? immerPeasy.finishDraft(_result)
-          : _result;
+        return immer.isDraft(_result) ? immer.finishDraft(_result) : _result;
       }
 
-      return immerPeasy.finishDraft(_draft);
+      return immer.finishDraft(_draft);
     }
 
     var parentPath = path.slice(0, path.length - 1);
-    var draft = immerPeasy.createDraft(state);
+    var draft = immer.createDraft(state);
     var parent = get(parentPath, state);
     var current = get(path, draft);
     var result = fn(current);
@@ -356,7 +354,7 @@ function createSimpleProduce(disableImmer) {
       parent[path[path.length - 1]] = result;
     }
 
-    return immerPeasy.finishDraft(draft);
+    return immer.finishDraft(draft);
   };
 }
 
@@ -1555,7 +1553,7 @@ function StoreProvider(_ref) {
  * explicitly disabled it to avoid perf issues.
  */
 
-immerPeasy.setAutoFreeze(false);
+immer.setAutoFreeze(false);
 
 exports.StoreProvider = StoreProvider;
 exports.action = action;

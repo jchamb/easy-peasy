@@ -4,7 +4,7 @@ import {
   createDraft,
   finishDraft,
   setAutoFreeze,
-} from 'immer-peasy';
+} from 'immer';
 import React, {
   createContext,
   useContext,
